@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Annotate the form of any YouTube recording with nested bubble diagrams." />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <title>Timeliner</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <button type="button" id="home-btn" class="brand" title="All timelines">
+        <svg viewBox="0 0 32 20" width="30" height="19" aria-hidden="true">
+          <path d="M1 19 V10 Q1 3 8 3 H24 Q31 3 31 10 V19 Z" fill="#ffb703" />
+          <path d="M4 19 V14 Q4 10 8 10 H12 Q15 10 15 14 V19 Z" fill="#8ecae6" />
+          <path d="M17 19 V14 Q17 10 21 10 H24 Q28 10 28 14 V19 Z" fill="#8ecae6" />
+        </svg>
+        Timeliner
+      </button>
+      <form id="load-form" class="load-form">
+        <input id="url-input" type="text" placeholder="Paste a YouTube link…" aria-label="YouTube link or video id" />
+        <button type="submit" class="primary">Load</button>
+      </form>
+      <div class="file-actions">
+        <button type="button" id="import-btn" title="Open a .timeline.json file">Import</button>
+        <input type="file" id="import-file" accept=".json,application/json" hidden />
+        <button type="button" id="export-btn" title="Save as a .timeline.json file" disabled>Export</button>
+        <button type="button" id="share-btn" title="Copy a link that contains this timeline" disabled>Share link</button>
+        <button type="button" id="help-btn" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts">?</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="welcome" class="welcome">
+        <h1>Draw the form of a piece of music.</h1>
+        <p>
+          Paste a YouTube link above. While it plays, press <kbd>T</kbd> to cut it into sections, then group sections
+          into larger bubbles and label them.
+        </p>
+        <div id="recent"></div>
+      </section>
+
+      <section id="workspace" class="workspace" hidden>
+        <div class="panels">
+          <div class="player-wrap"><div id="player" class="player"></div></div>
+          <div class="now">
+            <input id="title-input" class="title-input" type="text" aria-label="Timeline title" placeholder="Untitled timeline" />
+            <div id="now"></div>
+          </div>
+          <aside id="inspector" class="inspector"></aside>
+        </div>
+
+        <div class="toolbar" role="toolbar" aria-label="Timeline tools">
+          <button type="button" id="play-btn" class="primary play" title="Play / pause (Space)">▶</button>
+          <span id="clock" class="clock">0:00.0</span>
+          <span class="sep"></span>
+          <button type="button" data-action="timepoint" title="Add a timepoint at the playhead (T)">+ Timepoint</button>
+          <button type="button" data-action="marker" title="Add a marker at the playhead (M)">+ Marker</button>
+          <button type="button" data-action="group" title="Group selected bubbles (G)">Group</button>
+          <button type="button" data-action="ungroup" title="Ungroup selected bubble (U)">Ungroup</button>
+          <button type="button" data-action="delete" title="Delete selected timepoint or marker (Delete)">Delete</button>
+          <span class="sep"></span>
+          <button type="button" data-action="loop" aria-pressed="false" title="Loop the selected bubble (L)">⟲ Loop</button>
+          <button type="button" data-action="follow" aria-pressed="true" title="Keep the playhead in view (F)">Follow</button>
+          <span class="sep"></span>
+          <button type="button" data-action="zoom-out" title="Zoom out (−)">−</button>
+          <span id="zoom-label" class="zoom-label">1×</span>
+          <button type="button" data-action="zoom-in" title="Zoom in (+)">+</button>
+          <span class="sep"></span>
+          <button type="button" data-action="undo" title="Undo (Ctrl+Z)">Undo</button>
+          <button type="button" data-action="redo" title="Redo (Ctrl+Shift+Z)">Redo</button>
+        </div>
+
+        <div id="timeline-scroll" class="timeline-scroll">
+          <svg id="timeline" class="timeline" role="img" aria-label="Bubble timeline"></svg>
+        </div>
+        <p class="hint">
+          Click a bubble to jump to it · Double-click to play it · Shift-click to select neighbours · Ctrl+scroll to
+          zoom · Drag timepoints and markers to move them
+        </p>
+      </section>
+    </main>
+
+    <dialog id="help" class="help">
+      <h2>Keyboard shortcuts</h2>
+      <dl>
+        <dt><kbd>Space</kbd></dt><dd>Play / pause</dd>
+        <dt><kbd>T</kbd> or <kbd>Enter</kbd></dt><dd>Add a timepoint at the playhead</dd>
+        <dt><kbd>M</kbd></dt><dd>Add a marker at the playhead</dd>
+        <dt><kbd>G</kbd> / <kbd>U</kbd></dt><dd>Group / ungroup selected bubbles</dd>
+        <dt><kbd>Delete</kbd></dt><dd>Delete the selected timepoint or marker</dd>
+        <dt><kbd>L</kbd></dt><dd>Loop the selected bubble</dd>
+        <dt><kbd>F</kbd></dt><dd>Follow the playhead</dd>
+        <dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>Jump to the previous / next timepoint</dd>
+        <dt><kbd>Shift</kbd> + <kbd>←</kbd> <kbd>→</kbd></dt><dd>Skip 5 seconds</dd>
+        <dt><kbd>+</kbd> <kbd>−</kbd></dt><dd>Zoom in / out</dd>
+        <dt><kbd>Ctrl</kbd> + <kbd>Z</kbd></dt><dd>Undo (add <kbd>Shift</kbd> to redo)</dd>
+        <dt><kbd>Esc</kbd></dt><dd>Clear the selection</dd>
+      </dl>
+      <form method="dialog"><button class="primary">Close</button></form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
